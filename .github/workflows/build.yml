@@ -11,7 +11,7 @@ jobs:
   test-backend: 
     runs-on: ubuntu-22.04
     steps:
-      # Checkout your GitHub code using actions/checkout@v4
+      - name: Checkout Repository
       - uses: actions/checkout@v4
 
       # Set up JDK 21 using actions/setup-java@v3
