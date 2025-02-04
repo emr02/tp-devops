@@ -8,7 +8,8 @@ on:
 
 jobs:
   build-and-push-docker-image:
-    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_commit.ref == 'refs/heads/main'
+    if: github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main' # Ensure deploy only runs for main
     runs-on: ubuntu-22.04
 
     steps:
@@ -18,7 +19,7 @@ jobs:
 
       # Log in to Docker Hub using the provided credentials
       - name: Login to DockerHub
-        run: docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+        run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
 
       # Build the Docker image for the backend and push it to Docker Hub
       - name: Build image and push backend
@@ -37,6 +38,8 @@ jobs:
         with:
           context: ./database
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-database:latest
+          # Build on feature branches, push only on main branch
+          push: ${{ github.ref == 'refs/heads/main' }}
 
       # Build the Docker image for the HTTP server and push it to Docker Hub
       - name: Build image and push httpd
@@ -44,3 +47,5 @@ jobs:
         with:
           context: ./http-server
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest
+          # Build on feature branches, push only on main branch
+          push: ${{ github.ref == 'refs/heads/main' }}
