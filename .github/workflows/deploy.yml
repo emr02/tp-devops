@@ -48,10 +48,6 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ./http-server
-<<<<<<< HEAD
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest
-=======
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest
           # Build on feature branches, push only on main branch
           push: ${{ github.ref == 'refs/heads/main' }}
->>>>>>> main
