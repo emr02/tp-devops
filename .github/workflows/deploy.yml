@@ -40,3 +40,13 @@ jobs:
         with:
           context: ./http-server
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest
+
+      # Save Docker images as artifacts
+      - name: Save Docker images as artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: docker-images
+          path: |
+            ./simple-api
+            ./database
+            ./http-server
