@@ -1,13 +1,13 @@
-name: Deploy
+name: Build and Push Docker Image
 
 on:
   workflow_run:
-    workflows: ["Build"]
+    workflows: ["Test Backend"]
     types:
       - completed
 
 jobs:
-  deploy:
+  build-and-push-docker-image:
     if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-22.04
 
@@ -20,37 +20,27 @@ jobs:
       - name: Login to DockerHub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
-      # Build the Docker image for the backend
-      - name: Build backend image
+      # Build the Docker image for the backend and push it to Docker Hub
+      - name: Build image and push backend
         uses: docker/build-push-action@v3
         with:
+          # Relative path to the place where source code with Dockerfile is located
           context: ./simple-api
+          # Note: tags have to be all lower-case
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-simple-api:latest
+          # Build on feature branches, push only on main branch
+          push: ${{ github.ref == 'refs/heads/main' }}
 
-      # Build the Docker image for the database
-      - name: Build database image
+      # Build the Docker image for the database and push it to Docker Hub
+      - name: Build image and push database
         uses: docker/build-push-action@v3
         with:
           context: ./database
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-database:latest
 
-      # Build the Docker image for the HTTP server
-      - name: Build httpd image
+      # Build the Docker image for the HTTP server and push it to Docker Hub
+      - name: Build image and push httpd
         uses: docker/build-push-action@v3
         with:
-          context: ./http-server
+          context: ./httpd
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest
-
-      # Save Docker images as artifacts
-      - name: Save Docker images as artifacts
-        run: |
-          docker save ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-simple-api:latest -o simple-api.tar
-          docker save ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-database:latest -o database.tar
-          docker save ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest -o http-server.tar
-        uses: actions/upload-artifact@v3
-        with:
-          name: docker-images
-          path: |
-            simple-api.tar
-            database.tar
-            http-server.tar
