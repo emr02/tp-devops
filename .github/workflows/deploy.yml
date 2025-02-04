@@ -14,7 +14,7 @@ jobs:
     steps:
       # Checkout the code
       - name: Checkout code
-        uses: actions/checkout@v2.5.0
+        uses: actions/checkout@v4
 
       # Log in to Docker Hub using the provided credentials
       - name: Login to DockerHub
@@ -42,5 +42,5 @@ jobs:
       - name: Build image and push httpd
         uses: docker/build-push-action@v3
         with:
-          context: ./httpd
+          context: ./http-server
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest
