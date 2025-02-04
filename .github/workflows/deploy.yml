@@ -5,11 +5,11 @@ on:
     workflows: ["Test Backend"]
     types:
       - completed
-    branches: 
+    branches:
       - main
     pull_request:
       branches:
-        - main
+      - main
 
 jobs:
   build-and-push:
@@ -27,7 +27,8 @@ jobs:
         id: get_version
         run: echo ::set-output name=version::$(date +%Y%m%d%H%M%S)
 
-      - name: Build and Push Backend Image
+      # Build the Docker image for the backend and push it to Docker Hub
+      - name: Build image and push backend
         uses: docker/build-push-action@v3
         with:
           context: ./simple-api  # Chemin vers le Dockerfile de l’API
