@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
      #checkout your github code using actions/checkout@v2.5.0
-      - uses: actions/checkout@v2.5.0
+      - uses: actions/checkout@v4
 
      #do the same with another action (actions/setup-java@v3) that enable to setup jdk 21
       - name: Set up JDK 21
@@ -22,4 +22,5 @@ jobs:
 
      #finally build your app with the latest command
       - name: Build and test with Maven
-        run:  cd simple-api && mvn clean install
+        run:  mvn clean verify
+        working-directory: simple-api
