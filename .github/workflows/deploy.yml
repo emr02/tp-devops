@@ -14,11 +14,11 @@ jobs:
     steps:
       # Checkout the code
       - name: Checkout code
-        uses: actions/checkout@v2.5.0
+        uses: actions/checkout@v4
 
       # Log in to Docker Hub using the provided credentials
       - name: Login to DockerHub
-        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+        run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
 
       # Build the Docker image for the backend and push it to Docker Hub
       - name: Build image and push backend
