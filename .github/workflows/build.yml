@@ -6,6 +6,8 @@ on:
       - main
       - develop
     pull_request:
+      branches:
+        - develop
 
 jobs:
   test-backend:
@@ -23,3 +25,7 @@ jobs:
       - name: Build and test with Maven
         run: mvn -B verify sonar:sonar -Dsonar.projectKey=devops-project12345 -Dsonar.organization=devops-sonar123 -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=${{ secrets.SONAR_TOKEN }}
         working-directory: simple-api
+
+      - name: Check build result
+        if: failure()
+        run: exit 1
