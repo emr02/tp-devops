@@ -11,4 +11,4 @@ b. pas de push sur le docker hub
 2. Merge request de devlop a main :
 a. disable le merge si le build ou les tests fail
 b. Image avec le tag de version incrementé
-c. Push sur le docker Hub
+c. Push sur le docker Hub!
