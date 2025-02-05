@@ -44,6 +44,15 @@ jobs:
           # Build on feature branches, push only on main branch
           push: ${{ github.ref == 'refs/heads/main' }}
 
+      # Build the Docker image for the front-end and push it to Docker Hub
+      - name: Build image and push frontend
+        uses: docker/build-push-action@v3
+        with:
+          context: ./devops-front
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-frontend:latest
+          # Build on feature branches, push only on main branch
+          push: ${{ github.ref == 'refs/heads/main' }}
+
       # Build the Docker image for the HTTP server and push it to Docker Hub
       - name: Build image and push httpd
         uses: docker/build-push-action@v3
