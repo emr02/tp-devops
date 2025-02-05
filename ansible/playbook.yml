@@ -3,6 +3,7 @@
   become: true
 
   roles:
+    - env_file
     - create_network
     - launch_database
     - launch_app
