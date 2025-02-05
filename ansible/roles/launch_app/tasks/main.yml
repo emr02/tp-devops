@@ -1,0 +1,13 @@
+
+# tasks file for ansible/roles/launch_app
+
+- name: Run Simple API
+  community.docker.docker_container:
+    name: simple-api
+    image: "wanoni/tp-devops-simple-api:latest"
+    networks:
+      - name: app-network
+    env:
+        DBURL: "jdbc:postgresql://database:5432/db"
+        DBUSER: "db" 
+        DBPWD: "pwd" 

@@ -1,0 +1,13 @@
+
+# tasks file for ansible/roles/launch_database
+
+- name: Run Postgres
+  community.docker.docker_container:
+    name: postgres
+    image: "wanoni/tp-devops-database:latest"
+    networks:
+      - name: app-network
+    env:
+        DBURL: "jdbc:postgresql://database:5432/db"
+        DBUSER: "db" 
+        DBPWD: "pwd" 
