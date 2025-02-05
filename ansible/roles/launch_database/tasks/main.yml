@@ -6,7 +6,7 @@
     image: "wanoni/tp-devops-database:latest"
     pull: yes
     networks:
-      - name: my-network
+      - name: app-database-network
     env:
       POSTGRES_DB: "{{ POSTGRES_DB }}"
       POSTGRES_USER: "{{ POSTGRES_USER }}"

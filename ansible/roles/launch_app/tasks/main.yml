@@ -6,7 +6,7 @@
     image: "wanoni/tp-devops-simple-api:latest"
     pull: yes
     networks:
-      - name: my-network
+      - name: app-database-network
       - name: app-proxy-network
       - name: app-front-network
     env:

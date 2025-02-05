@@ -2,7 +2,7 @@
 
 - name: Create network
   community.docker.docker_network:
-    name: my-network
+    name: app-database-network
 
 - name: Create app-proxy network
   community.docker.docker_network:
