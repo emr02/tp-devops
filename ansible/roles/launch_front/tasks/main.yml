@@ -1,0 +1,11 @@
+# tasks file for ansible/roles/launch_front
+
+- name: Create the front container
+  community.docker.docker_container:
+    name: front
+    image: "wanoni/tp-devops-front:latest"
+    pull: yes
+    networks:
+      - name: my-network
+    ports:
+      -  80:80
