@@ -7,5 +7,6 @@
     pull: yes
     networks:
       - name: my-network
+      - name: app-proxy-network
     ports:
       -  80:80
