@@ -1,0 +1,7 @@
+---
+# tasks file for ansible/roles/env_file
+
+- name: Copy .env file to the server
+  copy:
+    src: .env
+    dest: /home/admin/.env

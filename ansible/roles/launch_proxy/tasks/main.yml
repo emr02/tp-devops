@@ -1,12 +1,16 @@
+---
 # tasks file for ansible/roles/launch_proxy
 
 - name: Run HTTPD
   community.docker.docker_container:
     name: httpd
     image: "wanoni/tp-devops-httpd:latest"
+    state: started
     pull: yes
-    networks:
-      - name: app-proxy-network
     ports:
       - "80:80" 
       - "8080:8080"
+    networks:
+      - name: app-proxy-network
+    container_default_behavior: compatibility
+    networks_cli_compatible: no

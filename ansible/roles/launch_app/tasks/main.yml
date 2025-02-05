@@ -1,14 +1,16 @@
+---
 # tasks file for ansible/roles/launch_app
 
 - name: Run Simple API
   community.docker.docker_container:
     name: simple-api
     image: "wanoni/tp-devops-simple-api:latest"
+    state: started
     pull: yes
+    env_file: /home/admin/.env
     networks:
       - name: app-database-network
       - name: app-proxy-network
       - name: app-front-network
-    env:
-      DATABASE_HOST: "{{ DATABASE_HOST }}"
-      DATABASE_PASSWORD: "{{ DATABASE_PASSWORD }}"
+    container_default_behavior: compatibility
+    networks_cli_compatible: no

@@ -1,3 +1,4 @@
+---
 # tasks file for ansible/roles/launch_database
 
 - name: Run Postgres
@@ -5,11 +6,10 @@
     name: postgres
     image: "wanoni/tp-devops-database:latest"
     pull: yes
+    env_file: /home/admin/.env
     networks:
       - name: app-database-network
-    env:
-      POSTGRES_DB: "{{ POSTGRES_DB }}"
-      POSTGRES_USER: "{{ POSTGRES_USER }}"
-      POSTGRES_PASSWORD: "{{ POSTGRES_PASSWORD }}"
+    container_default_behavior: compatibility
+    networks_cli_compatible: no
     volumes:
       - db-volume:/var/lib/postgresql/data

@@ -1,3 +1,4 @@
+---
 # tasks file for ansible/roles/create_network
 
 - name: Create network

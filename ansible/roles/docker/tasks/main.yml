@@ -1,3 +1,4 @@
+---
 # tasks file for ansible/roles/docker
 
 # Install prerequisites for Docker
