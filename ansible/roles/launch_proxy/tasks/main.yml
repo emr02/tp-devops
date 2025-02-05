@@ -4,7 +4,8 @@
   community.docker.docker_container:
     name: httpd
     image: "wanoni/tp-devops-httpd:latest"
+    pull: yes
     networks:
-      - name: my-network
+      - name: app-proxy-network
     ports:
       - "80:80"

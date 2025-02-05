@@ -2,6 +2,9 @@
   gather_facts: true
   become: true
 
+  vars_files:
+    - token.yml
+
   roles:
     - docker
     - create_network

@@ -4,8 +4,10 @@
   community.docker.docker_container:
     name: simple-api
     image: "wanoni/tp-devops-simple-api:latest"
+    pull: yes
     networks:
       - name: my-network
+      - name: app-proxy-network
     env:
-      DATABASE_HOST: "postgres"
-      DATABASE_PASSWORD: "pwd"
+      DATABASE_HOST: "{{ DATABASE_HOST }}"
+      DATABASE_PASSWORD: "{{ DATABASE_PASSWORD }}"
