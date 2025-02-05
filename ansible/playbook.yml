@@ -3,7 +3,6 @@
   become: true
 
   roles:
-    - docker
     - create_network
     - launch_database
     - launch_app
