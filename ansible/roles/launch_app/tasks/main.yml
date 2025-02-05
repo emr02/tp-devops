@@ -8,6 +8,7 @@
     networks:
       - name: my-network
       - name: app-proxy-network
+      - name: app-front-network
     env:
       DATABASE_HOST: "{{ DATABASE_HOST }}"
       DATABASE_PASSWORD: "{{ DATABASE_PASSWORD }}"

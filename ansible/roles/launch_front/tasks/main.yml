@@ -6,7 +6,4 @@
     image: "wanoni/tp-devops-front:latest"
     pull: yes
     networks:
-      - name: my-network
-      - name: app-proxy-network
-    ports:
-      -  8080:8080
+      - name: app-front-network
