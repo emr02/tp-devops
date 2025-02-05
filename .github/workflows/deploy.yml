@@ -49,7 +49,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ./devops-front
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-frontend:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-front:latest
           # Build on feature branches, push only on main branch
           push: ${{ github.ref == 'refs/heads/main' }}
 
