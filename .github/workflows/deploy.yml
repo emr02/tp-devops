@@ -8,8 +8,6 @@ on:
     branches:
       - main
     pull_request:
-      branches:
-      - main
 
 jobs:
   build-and-push-docker-image:
@@ -25,10 +23,6 @@ jobs:
       # Log in to Docker Hub using the provided credentials
       - name: Login to DockerHub
         run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Get version tag
-        id: get_version
-        run: echo ::set-output name=version::$(date +%Y%m%d%H%M%S)
 
       # Build the Docker image for the backend and push it to Docker Hub
       - name: Build image and push backend
