@@ -481,19 +481,19 @@ Commande ansible :
 ansible all -i ansible/inventories/setup.yml -m ping
 
 # request your server to get your OS distribution
-ansible all -i inventories/setup.yml -m setup -a "filter=ansible_distribution*"
+ansible all -i ansible/inventories/setup.yml -m setup -a "filter=ansible_distribution*"
 
 # Install Apache into your instance to make it a webserver
 $ ansible all -m apt -a "name=apache2 state=present" --private-key=id_rsa -u admin --become
 
 # remove Apache
-ansible all -i inventories/setup.yml -m apt -a "name=apache2 state=absent" --become
+ansible all -i ansible/inventories/setup.yml -m apt -a "name=apache2 state=absent" --become
 
 ```
 
 ```shell
 # Execute playbook, --syntex-check pour check avant de lancer
-ansible-playbook -i inventories/setup.yml ansible/playbook.yml
+ansible-playbook -i ansible/inventories/setup.yml ansible/playbook.yml
 ```
 
 ## Advanced Playbook
@@ -565,19 +565,19 @@ Playbook avec toutes les tâches dans `playbook.yml`
         state: started
       tags: docker
 ```
+Notre playbook d'installation de docker est sympa et tout mais il sera plus propre à avoir à un endroit précis, dans un rôle par exemple. On ne garde que `handlers` et `tasks`
 
-On crée
+On crée : 
+```shell
 ansible-galaxy init ansible/roles/copy_env_file
 ansible-galaxy init ansible/roles/install_docker
 ansible-galaxy init ansible/roles/create_network
 ansible-galaxy init ansible/roles/launch_database
 ansible-galaxy init ansible/roles/launch_app
 ansible-galaxy init ansible/roles/launch_proxy
+```
 
-ne garder que tasks et handlers, chaque rôle va avoir une tâche
 
-Le front sera aussi accessible sur:
-http://emre.elma.takima.cloud/
 
 ansible-playbook -i ansible/inventories/setup.yml ansible/playbook.yml
 
