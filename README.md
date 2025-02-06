@@ -315,11 +315,7 @@ docker push wanoni/my-database:1.0
 
 Mettre nos images dans un dépôt en ligne comme Docker Hub permet de les partager facilement avec d'autres, de les sauvegarder, d'y accéder à distance et de gérer les versions. C'est essentiel pour collaborer et déployer de manière efficace.
 
----
-
 # TP2 : Github Actions
-
-Je me suis servi de la correction pour ce tp : https://github.com/emr02/tp-devops-correction-docker
 
 **2-1 What are testcontainers?**
 
@@ -327,107 +323,14 @@ They simply are java libraries that allow you to run a bunch of docker container
 
 **2-2 Document your Github Actions configurations.**
 
-Github Action pour tester le backend à chaque commit sur la branch main :
+Github Action :
+1. pour tester le backend à chaque commit sur la branch main
+2. le publier
 
 ```yml
-name: CI devops 2025
-on:
-  #to begin you want to launch this job in main and develop
-  push:
-    branches:
-      - main
-  pull_request:
-
-jobs:
-  test-backend: 
-    runs-on: ubuntu-22.04
-    steps:
-      # Checkout your GitHub code using actions/checkout@v4
-      - uses: actions/checkout@v4
-
-      # Set up JDK 21 using actions/setup-java@v3
-      - name: Set up JDK 21
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'corretto'
-          java-version: '21'
-
-      # Build and test the project using Maven
-      - name: Build and test with Maven
-        # enlever --file ./simple-api/pom. et changer sonar.logn to sonar.token
-        run: mvn -B verify sonar:sonar -Dsonar.projectKey=devops-project12345 -Dsonar.organization=devops-sonar123 -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=${{ secrets.SONAR_TOKEN }}
-        working-directory: simple-api
-
-  # Define job to build and publish docker image
-  build-and-push-docker-image:
-    needs: test-backend
-    # Run only when code is compiling and tests are passing
-    runs-on: ubuntu-22.04
-
-    # Steps to perform in job
-    steps:
-      # Checkout the code
-      - name: Checkout code
-        uses: actions/checkout@v2.5.0
-
-      # Log in to Docker Hub using the provided credentials
-      - name: Login to DockerHub
-        run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
-
-      # Build the Docker image for the backend and push it to Docker Hub
-      - name: Build image and push backend
-        uses: docker/build-push-action@v3
-        with:
-          # Relative path to the place where source code with Dockerfile is located
-          context: ./simple-api
-          # Note: tags have to be all lower-case
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-simple-api:latest
-          # Build on feature branches, push only on main branch
-          push: ${{ github.ref == 'refs/heads/main' }}
-
-      # Build the Docker image for the database and push it to Docker Hub
-      - name: Build image and push database
-        uses: docker/build-push-action@v3
-        with:
-          context: ./database
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-database:latest
-          # build on feature branches, push only on main branch
-          push: ${{ github.ref == 'refs/heads/main' }}
-
-      # Build the Docker image for the HTTP server and push it to Docker Hub
-      - name: Build image and push httpd
-        uses: docker/build-push-action@v3
-        with:
-          context: ./http-server
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest
-          # build on feature branches, push only on main branch
-          push: ${{ github.ref == 'refs/heads/main' }}
-```
-**2-3 For what purpose do we need to push docker images?**
-
-On pousse des images Docker pour simplifier le déploiement, rendre l’application accessible depuis n’importe quel serveur ou cloud et automatiser les mises à jour sans configuration complexe. 
-**2.4**
-```yml
-mvn -B verify sonar:sonar -Dsonar.projectKey=devops-project12345 -Dsonar.organization=devops-sonar123 -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=${{ secrets.SONAR_TOKEN }}
-```
-Cette commande exécute **Maven** pour tester et analyser le code avec **SonarCloud** :  
-
-### Décomposition :
-1. **`mvn -B`** → Exécute Maven en mode "batch" (évite les interactions utilisateur).
-2. **`verify`** → Compile et teste le projet pour vérifier son bon fonctionnement.
-3. **`sonar:sonar`** → Lance l'analyse du code avec **SonarCloud** (vérification de la qualité du code, détection de bugs, etc.).
-4. **`-Dsonar.projectKey=devops-project12345`** → Identifie le projet dans **SonarCloud**.
-5. **`-Dsonar.organization=devops-sonar123`** → Spécifie l'organisation SonarCloud associée.
-6. **`-Dsonar.host.url=https://sonarcloud.io`** → Indique l’URL du serveur SonarCloud.
-7. **`-Dsonar.token=${{ secrets.SONAR_TOKEN }}`** → Utilise un **jeton secret** pour s’authentifier et envoyer les résultats sur SonarCloud.
-
-### En résumé :
-👉 **Cette commande compile, teste et envoie l'analyse du code à SonarCloud pour évaluer sa qualité.** ✅
-
-
 ## Bonus: split pipelines (Optional)
 
-Build
+Build : On teste le backend sur le merge sur main
 ```yml
 name: Test Backend
 
@@ -458,7 +361,7 @@ jobs:
         working-directory: simple-api
 
 ```
-Deploy
+Deploy : on publie
 
 ```yml
 name: Build and Push Docker Image
@@ -515,26 +418,87 @@ jobs:
           # Build on feature branches, push only on main branch
           push: ${{ github.ref == 'refs/heads/main' }}
 
+      # Build the Docker image for the front-end and push it to Docker Hub
+      - name: Build image and push frontend
+        uses: docker/build-push-action@v3
+        with:
+          context: ./devops-front
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-front:latest
+          # Build on feature branches, push only on main branch
+          push: ${{ github.ref == 'refs/heads/main' }}
 ```
----
+**2-3 For what purpose do we need to push docker images?**
+
+On pousse des images Docker pour simplifier le déploiement, rendre l’application accessible depuis n’importe quel serveur ou cloud et automatiser les mises à jour sans configuration complexe. 
+
+**2-4 Document your quality gate configuration**
+```yml
+mvn -B verify sonar:sonar -Dsonar.projectKey=devops-project12345 -Dsonar.organization=devops-sonar123 -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+```
+Cette commande exécute **Maven** pour tester et analyser le code avec **SonarCloud** :  
+
+### Décomposition :
+1. **`mvn -B`** → Exécute Maven en mode "batch" (évite les interactions utilisateur).
+2. **`verify`** → Compile et teste le projet pour vérifier son bon fonctionnement.
+3. **`sonar:sonar`** → Lance l'analyse du code avec **SonarCloud** (vérification de la qualité du code, détection de bugs, etc.).
+4. **`-Dsonar.projectKey=devops-project12345`** → Identifie le projet dans **SonarCloud**.
+5. **`-Dsonar.organization=devops-sonar123`** → Spécifie l'organisation SonarCloud associée.
+6. **`-Dsonar.host.url=https://sonarcloud.io`** → Indique l’URL du serveur SonarCloud.
+7. **`-Dsonar.token=${{ secrets.SONAR_TOKEN }}`** → Utilise un **jeton secret** pour s’authentifier et envoyer les résultats sur SonarCloud.
+
+### En résumé :
+**Cette commande compile, teste et envoie l'analyse du code à SonarCloud pour évaluer sa qualité.**
+
 # TP3
 
-connect ssh :
-- chmod 400 id_rsa
-- ssh -i id_rsa admin@emre.elma.takima.cloud
+Connexion en ssh :
 
-add /etc/ansible/hosts  -> add emre.elma.takima.cloud
+```shell
+chmod 400 id_rsa
+ssh -i id_rsa admin@emre.elma.takima.cloud
+```
 
-HTML affiche http://emre.elma.takima.cloud/
+add dans `/etc/ansible/hosts` , le dns doit marcher
+```
+emre.elma.takima.cloud
+```
+`Inventories/setup.yml` :
+```yml
+all:
+ vars:
+   ansible_user: admin
+   ansible_ssh_private_key_file: id_rsa
+ children:
+   prod:
+     hosts: emre.elma.takima.cloud
+```
 
+Commande ansible :
 
+```shell
+
+# To ping 
 ansible all -i ansible/inventories/setup.yml -m ping
+
+# request your server to get your OS distribution
+ansible all -i inventories/setup.yml -m setup -a "filter=ansible_distribution*"
+
+# Install Apache into your instance to make it a webserver
+$ ansible all -m apt -a "name=apache2 state=present" --private-key=id_rsa -u admin --become
+
+# remove Apache
+ansible all -i inventories/setup.yml -m apt -a "name=apache2 state=absent" --become
+
+```
+
+```shell
+# Execute playbook, --syntex-check pour check avant de lancer
 ansible-playbook -i inventories/setup.yml ansible/playbook.yml
-ansible-playbook -i inventories/setup.yml ansible/playbook.yml--syntax-check
+```
 
-connect ssh and test docker: systemctl status docker
+## Advanced Playbook
 
-add roles :docker:
+Playbook avec toutes les tâches dans `playbook.yml`
 ```yml
 - hosts: all
   gather_facts: true
@@ -601,6 +565,8 @@ add roles :docker:
         state: started
       tags: docker
 ```
+
+On crée
 ansible-galaxy init ansible/roles/copy_env_file
 ansible-galaxy init ansible/roles/install_docker
 ansible-galaxy init ansible/roles/create_network
