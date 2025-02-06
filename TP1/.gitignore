@@ -1,0 +1,7 @@
+# Ignore IDE-specific files
+.vscode/
+.idea/
+*.iml
+
+# Ignore PostgreSQL data directory
+data/

@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  backend:
+    build:
+      context: ./backend_api/app2
+      dockerfile: Dockerfile
+    container_name: simple-api-student
+    networks:
+      - app-network
+    depends_on:
+      - database
+
+  database:
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    container_name: mypostgres
+    networks:
+      - app-network
+    volumes:
+      - ./data:/var/lib/postgresql/data
+
+  httpd:
+    build:
+      context: ./http_server
+      dockerfile: Dockerfile
+    container_name: simple-http-server
+    networks:
+      - app-network
+    ports:
+      - 8040:80
+
+networks:
+  app-network:
