@@ -8,7 +8,7 @@
     pull: yes
     networks:
       - name: app-database-network
-      - name: appn-front-network
+      - name: app-front-network
     ports:
       - "80:80"
       - "8080:8080"
