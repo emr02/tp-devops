@@ -1,13 +1,10 @@
 ---
 # tasks file for ansible/roles/launch_front
 
-- name: Run front
-  docker_container:
-    name: front 
+- name: Launch Front container
+  community.docker.docker_container:
+    name: front
     image: wanoni/tp-devops-front:latest
     pull: yes
-    env_file: /home/admin/.env
     networks:
       - name: app-front-network
-    container_default_behavior: compatibility
-    networks_cli_compatible: no

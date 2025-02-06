@@ -1,11 +1,12 @@
 - hosts: all
   gather_facts: true
   become: true
-
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
   roles:
     # - docker
-    - env_file
     - create_network
+    - copy_env_file
     - launch_database
     - launch_app
     - launch_proxy

@@ -1,0 +1,10 @@
+---
+# tasks file for ansible/roles/env_file
+
+- name: Copy .env
+  ansible.builtin.copy:
+    src: /home/wind/tp-devops-correction-docker/ansible/.env
+    dest: /.env
+    owner: admin
+    group: admin
+    mode: '0644'
