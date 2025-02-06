@@ -462,15 +462,24 @@ add dans `/etc/ansible/hosts` , le dns doit marcher
 ```
 emre.elma.takima.cloud
 ```
+
+**3-1 Document your inventory and base commands**
+
 `Inventories/setup.yml` :
 ```yml
+# Définition de l'inventaire Ansible
 all:
- vars:
-   ansible_user: admin
-   ansible_ssh_private_key_file: id_rsa
- children:
-   prod:
-     hosts: emre.elma.takima.cloud
+  vars:
+    # Utilisateur SSH pour se connecter aux hôtes
+    ansible_user: admin
+    # Chemin vers la clé privée SSH pour l'authentification
+    ansible_ssh_private_key_file: /home/wind/id_rsa
+  children:
+    # Groupe d'hôtes de production
+    prod:
+      # Liste des hôtes dans le groupe de production
+      hosts:
+        emre.elma.takima.cloud:
 ```
 
 Commande ansible :
@@ -497,6 +506,8 @@ ansible-playbook -i ansible/inventories/setup.yml ansible/playbook.yml
 ```
 
 ## Advanced Playbook
+
+**3-2 Document your playbook**
 
 Playbook avec toutes les tâches dans `playbook.yml`
 ```yml
@@ -576,19 +587,24 @@ ansible-galaxy init ansible/roles/launch_database
 ansible-galaxy init ansible/roles/launch_app
 ansible-galaxy init ansible/roles/launch_proxy
 ```
-
-Par exemple, rôle pour `launch-proxy` :
+**3-3 Document your docker_container tasks configuration.**
+La configuration est similaire, par exemple, rôle pour `launch-proxy` :
 ```yml
 # tasks file for ansible/roles/launch_proxy
 
 - name: Launch Proxy Container
   community.docker.docker_container:
+    # Nom du conteneur Docker
     name: http-server
+    # Image Docker à utiliser pour le conteneur
     image: wanoni/tp-devops-httpd:latest
+    # Toujours tirer la dernière version de l'image
     pull: yes
+    # Réseaux Docker auxquels le conteneur sera connecté
     networks:
       - name: app-database-network
       - name: app-front-network
+    # Ports à exposer sur le conteneur
     ports:
       - "80:80"
       - "8080:8080"
