@@ -1,0 +1,42 @@
+name: Deploy
+
+on:
+  # workflow_run:
+  #   workflows:
+  #     - Build and Push Docker Images
+  #   types:
+  #     - completed
+  #   branches:
+  #     - main
+  # pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure SSH
+        env:
+          ANSIBLE_PRIVATE_KEY: ${{ secrets.RSA_PRIVATE_KEY }}
+        run: |
+          echo "${ANSIBLE_PRIVATE_KEY}" > private_key.pem
+          chmod 400 private_key.pem
+          mkdir -p ~/.ssh
+          ssh-keyscan -t rsa,dsa emre.elma.takima.cloud >> ~/.ssh/known_hosts
+          mv private_key.pem ~/.ssh/id_rsa
+
+      - name: Run Ansible Playbook
+        env:
+          ENV: ${{ secrets.ENV }}
+        run: |
+          ssh -o StrictHostKeyChecking=no admin@emre.elma.takima.cloud << 'EOF'
+          cd /path/to/your/application
+          docker-compose down
+          docker-compose pull
+          docker-compose up -d
+          EOF
