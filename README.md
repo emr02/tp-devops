@@ -11,7 +11,6 @@ ENV POSTGRES_DB=db \
 
 COPY ./initdb /docker-entrypoint-initdb.d/
 ```
-
 - **FROM** définit l'image de base du conteneur, dans ce cas, PostgreSQL.  
 - **COPY** transfère un fichier depuis la machine hôte vers un répertoire spécifique du conteneur Docker.  
 - **ENV** sert à définir des variables d'environnement au sein du conteneur Docker.
