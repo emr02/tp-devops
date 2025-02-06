@@ -1,9 +1,10 @@
+---
 # tasks file for ansible/roles/launch_front
 
-- name: Create the front container
-  community.docker.docker_container:
-    name: front
-    image: "wanoni/tp-devops-front:latest"
+- name: Run front
+  docker_container:
+    name: front 
+    image: wanoni/tp-devops-front:lastest
     pull: yes
     env_file: /home/admin/.env
     networks:

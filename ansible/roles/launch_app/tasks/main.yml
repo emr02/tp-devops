@@ -4,7 +4,7 @@
 - name: Run Simple API
   community.docker.docker_container:
     name: simple-api
-    image: "wanoni/tp-devops-simple-api:latest"
+    image: wanoni/tp-devops-simple-api:latest
     state: started
     pull: yes
     env_file: /home/admin/.env

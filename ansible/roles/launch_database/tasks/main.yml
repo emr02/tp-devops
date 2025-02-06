@@ -4,7 +4,7 @@
 - name: Run Postgres
   community.docker.docker_container:
     name: postgres
-    image: "wanoni/tp-devops-database:latest"
+    image: wanoni/tp-devops-database:latest
     pull: yes
     env_file: /home/admin/.env
     networks:

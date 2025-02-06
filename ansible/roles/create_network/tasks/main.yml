@@ -10,5 +10,5 @@
     name: app-proxy-network
 
 - name: Create proxy to front network
-  docker_network:
+  community.docker.docker_network:
     name: app-front-network

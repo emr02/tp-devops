@@ -4,7 +4,7 @@
 - name: Run HTTPD
   community.docker.docker_container:
     name: httpd
-    image: "wanoni/tp-devops-httpd:latest"
+    image: wanoni/tp-devops-httpd:latest
     state: started
     pull: yes
     ports:
