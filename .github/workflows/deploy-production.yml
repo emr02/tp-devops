@@ -2,12 +2,11 @@ name: Deploy
 
 on:
   workflow_run:
-    workflows:
-    - Build and Push Docker Images
+    workflows: ["Build and Push Docker Image"]
     types:
-      - completed
+     - completed
     branches:
-      - main
+     - main
   pull_request:
   
 
