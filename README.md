@@ -588,7 +588,7 @@ ansible-galaxy init ansible/roles/launch_app
 ansible-galaxy init ansible/roles/launch_proxy
 ```
 
-**3-3 Document your docker_container tasks configuration.**
+**3-3 Document your docker_container tasks configuration**
 La configuration est similaire, par exemple, rôle pour `launch-proxy` :
 ```yml
 # tasks file for ansible/roles/launch_proxy
