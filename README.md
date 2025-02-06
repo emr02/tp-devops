@@ -1,7 +1,6 @@
 # TP1
 
 ## Database
-
 ```sh
 FROM postgres:14.1-alpine
 
