@@ -4,7 +4,7 @@
 - name: Launch Proxy Container
   community.docker.docker_container:
     name: http-server
-    image: evlacy/tp-devops-httpd:latest
+    image: wanoni/tp-devops-httpd:latest
     pull: yes
     networks:
       - name: app-database-network

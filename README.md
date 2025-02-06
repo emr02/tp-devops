@@ -577,9 +577,24 @@ ansible-galaxy init ansible/roles/launch_app
 ansible-galaxy init ansible/roles/launch_proxy
 ```
 
+Par exemple, rôle pour `launch-proxy` :
+```yml
+# tasks file for ansible/roles/launch_proxy
+
+- name: Launch Proxy Container
+  community.docker.docker_container:
+    name: http-server
+    image: wanoni/tp-devops-httpd:latest
+    pull: yes
+    networks:
+      - name: app-database-network
+      - name: app-front-network
+    ports:
+      - "80:80"
+      - "8080:8080"
+```
 
 
-ansible-playbook -i ansible/inventories/setup.yml ansible/playbook.yml
 
 
 
