@@ -6,7 +6,7 @@
   roles:
     # - docker
     - create_network
-    - copy_env_file
+    # - copy_env_file
     - launch_database
     - launch_app
     - launch_proxy
