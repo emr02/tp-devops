@@ -4,7 +4,7 @@
 - name: Run front
   docker_container:
     name: front 
-    image: wanoni/tp-devops-front:lastest
+    image: wanoni/tp-devops-front:latest
     pull: yes
     env_file: /home/admin/.env
     networks:
