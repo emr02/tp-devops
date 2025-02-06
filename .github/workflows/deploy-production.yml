@@ -24,7 +24,7 @@ jobs:
         env:
           ANSIBLE_PRIVATE_KEY: ${{ secrets.RSA_PRIVATE_KEY }}
         run: |
-          echo "${ANSIBLE_PRIVATE_KEY}" > private_key.pem
+          echo "${RSA_PRIVATE_KEY}" > private_key.pem
           chmod 400 private_key.pem
           mkdir -p ~/.ssh
           ssh-keyscan -t rsa,dsa emre.elma.takima.cloud >> ~/.ssh/known_hosts
