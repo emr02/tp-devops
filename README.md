@@ -601,15 +601,17 @@ add roles :docker:
         state: started
       tags: docker
 ```
+ansible-galaxy init ansible/roles/copy_env_file
 ansible-galaxy init ansible/roles/install_docker
 ansible-galaxy init ansible/roles/create_network
 ansible-galaxy init ansible/roles/launch_database
 ansible-galaxy init ansible/roles/launch_app
 ansible-galaxy init ansible/roles/launch_proxy
 
-ne garder que tasks et handlers
+ne garder que tasks et handlers, chaque rôle va avoir une tâche
 
-http://emre.elma.takima.cloud:8050/
+Le front sera aussi accessible sur:
+http://emre.elma.takima.cloud/
 
 ansible-playbook -i ansible/inventories/setup.yml ansible/playbook.yml
 

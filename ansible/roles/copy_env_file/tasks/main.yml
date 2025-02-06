@@ -3,7 +3,7 @@
 
 - name: Copy .env
   ansible.builtin.copy:
-    src: /home/wind/tp-devops-correction-docker/ansible/.env
+    src: /home/wind/tp-devops/ansible/.env
     dest: /.env
     owner: admin
     group: admin
