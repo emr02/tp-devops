@@ -575,16 +575,17 @@ Playbook avec toutes les tâches dans `playbook.yml`
         state: started
       tags: docker
 ```
-Notre playbook d'installation de docker est sympa et tout mais il sera plus propre à avoir à un endroit précis, dans un rôle par exemple. On ne garde que `handlers` et `tasks`
+Notre playbook d'installation de docker est sympa et tout mais il sera plus propre à avoir à un endroit précis, dans un rôle par exemple. On ne garde que `handlers` et `tasks`.
+Ajout du front aussi
 
 On crée : 
 ```shell
 ansible-galaxy init ansible/roles/copy_env_file
-ansible-galaxy init ansible/roles/install_docker
 ansible-galaxy init ansible/roles/create_network
 ansible-galaxy init ansible/roles/launch_database
 ansible-galaxy init ansible/roles/launch_app
 ansible-galaxy init ansible/roles/launch_proxy
+ansible-galaxy init ansible/roles/launch_front
 ```
 
 **3-3 Document your docker_container tasks configuration**
@@ -609,6 +610,8 @@ La configuration est similaire, par exemple, rôle pour `launch-proxy` :
       - "80:80"
       - "8080:8080"
 ```
+
+On aura notre app et le front sur `http://emre.elma.takima.cloud/departments`
 
 ### Continuous Deployment
 `test-nackend.yml` se lance en 1er.
