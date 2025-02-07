@@ -610,8 +610,50 @@ La configuration est similaire, par exemple, rôle pour `launch-proxy` :
       - "8080:8080"
 ```
 
+### Continuous Deployment
+`test-nackend.yml` se lance en 1er.
+Une fois fini, `build-push.yml` se lance.
+Et finalement, `deploy-production` se lance
 
+```yml
 
+# Nom du workflow
+name: Deploy
 
+# Déclencheurs du workflow
+on:
+  workflow_run:
+    workflows: ["Build and Push Docker Image"]  # Ce workflow s'exécute après la complétion du workflow "Build and Push Docker Image"
+    types:
+     - completed
+    branches:
+     - main  # Ce workflow s'exécute uniquement sur la branche "main"
+  pull_request:  # Ce workflow s'exécute également lors de la création de pull requests
 
+# Définition des jobs
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Le job s'exécute sur une machine virtuelle Ubuntu
 
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2  # Cette étape utilise l'action checkout pour récupérer le code source du dépôt
+
+      - name: Configure SSH
+        env:
+          ANSIBLE_PRIVATE_KEY: ${{ secrets.RSA_PRIVATE_KEY }}  # Utilisation de la clé privée SSH stockée dans les secrets GitHub
+        run: |
+          echo "${ANSIBLE_PRIVATE_KEY}" > private_key.pem  # Écriture de la clé privée dans un fichier
+          chmod 400 private_key.pem  # Modification des permissions du fichier pour qu'il soit lisible uniquement par le propriétaire
+          mkdir -p ~/.ssh  # Création du répertoire .ssh s'il n'existe pas
+          ssh-keyscan -t rsa,dsa emre.elma.takima.cloud >> ~/.ssh/known_hosts  # Ajout de l'hôte distant à la liste des hôtes connus
+          mv private_key.pem ~/.ssh/id_rsa  # Déplacement de la clé privée dans le répertoire .ssh
+
+      - name: Run Ansible Playbook
+        env:
+          ENV: ${{ secrets.ENV }}  # Utilisation de la variable d'environnement stockée dans les secrets GitHub
+        run: |
+          echo "${ENV}" > env  # Écriture de la variable d'environnement dans un fichier
+          chmod 400 env  # Modification des permissions du fichier pour qu'il soit lisible uniquement par le propriétaire
+          ansible-playbook -i ansible/inventories/setup.yml ansible/playbook.yml  # Exécution du playbook Ansible pour déployer l'application
+```
