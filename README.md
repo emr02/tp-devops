@@ -611,6 +611,38 @@ La configuration est similaire, par exemple, rôle pour `launch-proxy` :
       - "8080:8080"
 ```
 
+`httpd.conf` à modifier pour le front
+```
+# Écoute sur le port 8080
+Listen 8080
+
+# Configuration du VirtualHost pour le port 8080
+<VirtualHost *:8080>
+    # Préserve l'hôte d'origine dans les requêtes proxy
+    ProxyPreserveHost On
+
+    # Redirige les requêtes vers le backend simple-api sur le port 8080
+    ProxyPass / http://simple-api:8080/
+    ProxyPassReverse / http://simple-api:8080/
+</VirtualHost>
+
+# Configuration du VirtualHost pour le port 80
+<VirtualHost *:80>
+    # Préserve l'hôte d'origine dans les requêtes proxy
+    ProxyPreserveHost On
+
+    # Redirige les requêtes vers le frontend sur le port 80
+    ProxyPass / http://front:80/
+    ProxyPassReverse / http://front:80/
+</VirtualHost>
+
+# Charge le module proxy pour Apache
+LoadModule proxy_module modules/mod_proxy.so
+
+# Charge le module proxy_http pour Apache
+LoadModule proxy_http_module modules/mod_proxy_http.so
+```
+
 On aura notre app et le front sur `http://emre.elma.takima.cloud/departments`
 
 ### Continuous Deployment
